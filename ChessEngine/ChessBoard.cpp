@@ -1,5 +1,4 @@
 #include "ChessBoard.h"
-#include "Bitboard.h"
 
 uint64_t ChessBoard::getAllWhitePieces()
 {
