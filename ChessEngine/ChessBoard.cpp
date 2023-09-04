@@ -1,4 +1,5 @@
 #include "ChessBoard.h"
+#include "Bitboard.h"
 
 uint64_t ChessBoard::getAllWhitePieces()
 {
@@ -25,14 +26,4 @@ uint64_t ChessBoard::getAllPieces()
     return getAllBlackPieces() | getAllWhitePieces();
 }
 
-void ChessBoard::loadFEN(std::string fenStr)
-{
-    uint64_t currPosition = (uint64_t)1 << 63;
 
-
-}
-
-std::string ChessBoard::getFEN()
-{
-    return std::string();
-}

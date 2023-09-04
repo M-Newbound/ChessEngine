@@ -3,6 +3,11 @@
 #include <cstdint>
 
 
+struct ChessMove {
+	std::uint8_t fromSquare;
+	std::uint8_t toSquare;
+};
+
 struct ChessBoard
 {
 	/* The white piece positions */
@@ -26,8 +31,5 @@ struct ChessBoard
 	std::uint64_t getAllBlackPieces();
 	std::uint64_t getAllPieces();
 
-
-	void loadFEN(std::string fenStr);
-	std::string getFEN();
 };
 
