@@ -122,13 +122,14 @@ std::uint64_t MoveGeneration::pawnPseudoMovesBitboard(ChessBoard& board, const s
 
 	// Calculate shifted bitboards by directions based on color
 	const std::uint64_t forward       = forWhite ? pawn    << 8 : pawn    >> 8;
-	const std::uint64_t doubleforward = forWhite ? forward << 8 : forward >> 8;
-	
+
 	const std::uint64_t captureLeft   = forWhite ? (pawn & ~file1Mask)  << 9 : (pawn & ~file1Mask) >> 7;
 	const std::uint64_t captureRight  = forWhite ? (pawn & ~file8Mask)  << 7 : (pawn & ~file8Mask) >> 9;
 
 	// mask there shifted bitboards to determin if move is psudo legal.
 	std::uint64_t singleMove = forward & ~board.getAllPieces();
+	const std::uint64_t doubleforward = forWhite ? singleMove << 8 : singleMove >> 8;
+
 	std::uint64_t doubleMove = doubleforward & ~board.getAllPieces() & (forWhite ? rank4Mask : rank5Mask);
 
 	std::uint64_t lhsCapture = captureLeft & (forWhite ? board.getAllBlackPieces() : board.getAllWhitePieces());
