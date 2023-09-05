@@ -3,8 +3,8 @@
 
 class BoardEvaluation
 {
-
-	float getEvaluation(const ChessBoard* board, bool forWhite);
+public:
+	static int32_t getEvaluation(const ChessBoard* board, bool forWhite, bool andOther=true);
 
 };
 

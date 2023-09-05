@@ -4,6 +4,7 @@
 #include <vector>
 #include "ChessBoard.h"
 #include "MoveGeneration.h"
+#include "BoardEvaluation.h"
 
 #include <chrono>
 
@@ -101,17 +102,26 @@ int main() {
     ChessBoard myBoard;
 
     // Example FEN string for starting position:
-//    std::string fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-      std::string fenString = "rnbqkbnr / 1pp1pppp / 8 / p2p4 / 2B1P3 / 5N2 / PPPP1PPP / RNBQK2R";
+      std::string fenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+      std::string fenExample = "rnbqkbnr / 1pp1pppp / 8 / p2p4 / 2B1P3 / 5N2 / PPPP1PPP / RNBQK2R";
+      std::string fenBlackCheckmate = "3rkbnr/1p1bp3/1q1p3p/p5pQ/3n4/PPR5/5PPP/6K1";
 
       
 
     // Load the FEN string into the ChessBoard
-    if (loadFEN(myBoard, fenString)) {
+    if (loadFEN(myBoard, fenBlackCheckmate)) {
         
 
+        std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(&myBoard, false);
+
+        for (ChessMove move : moves) {
+            std::cout << "from " << unsigned(move.fromSquare) << " to " << unsigned(move.toSquare) << std::endl;
+        }
 
 
+        int32_t eval = BoardEvaluation::getEvaluation(&myBoard, false, true);
+        std::cout << eval << std::endl;
+        
         
     }
     else {
