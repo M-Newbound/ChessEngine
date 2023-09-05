@@ -4,16 +4,21 @@
 
 #include "ChessBoard.h"
 
+
 struct ChessMove {
-	std::uint8_t fromSquare;
-	std::uint8_t toSquare;
+    ChessMove(std::uint8_t from, std::uint8_t to) : fromSquare(from), toSquare(to) {};
+	const std::uint8_t fromSquare;
+	const std::uint8_t toSquare;
+
 };
 
 class MoveGeneration
 {
 
 public:
-	static std::vector<ChessMove> generateLegalMoves(const ChessBoard& board);
+	static std::vector<ChessMove*> generateLegalMoves(ChessBoard& board, bool forWhite);
+    static bool isCheck(ChessBoard& board, bool forWhite);
+    static std::uint64_t getDangerSquares(ChessBoard& board, bool forWhite);
 
 
 private:
