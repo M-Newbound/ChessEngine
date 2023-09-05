@@ -18,7 +18,7 @@ class MoveGeneration
 public:
 	static std::vector<ChessMove> generateLegalMoves(const ChessBoard* board, bool forWhite);
     static bool isCheck(const ChessBoard* board, bool forWhite);
-    static std::uint64_t getDangerSquares(const ChessBoard* board, bool forWhite);
+    static std::uint64_t getDangerSquares(const ChessBoard* board, bool asWhite);
 
 
 private:

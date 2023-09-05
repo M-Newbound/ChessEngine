@@ -45,32 +45,32 @@ std::vector<ChessMove> MoveGeneration::generateLegalMoves(const ChessBoard* boar
 bool MoveGeneration::isCheck(const ChessBoard* board, bool forWhite)
 {
 	if (forWhite) {
-		return (getDangerSquares(board, true) & board->whiteKing) != 0;
+		return (getDangerSquares(board, false) & board->whiteKing) != 0;
 	}
 
-	return (getDangerSquares(board, false) & board->blackKing) != 0;
+	return (getDangerSquares(board, true) & board->blackKing) != 0;
 }
 
-std::uint64_t MoveGeneration::getDangerSquares(const ChessBoard* board, bool forWhite)
+std::uint64_t MoveGeneration::getDangerSquares(const ChessBoard* board, bool asWhite)
 {
-	const std::uint64_t* pawns = forWhite ? &board->whitePawns : &board->blackPawns;
-	const std::uint64_t* rooks = forWhite ? &board->whiteRooks : &board->blackRooks;
-	const std::uint64_t* knights = forWhite ? &board->whiteKnights : &board->blackKnights;
-	const std::uint64_t* bishops = forWhite ? &board->whiteBishops : &board->blackBishops;
-	const std::uint64_t* queens = forWhite ? &board->whiteQueens : &board->blackQueens;
-	const std::uint64_t* king = forWhite ? &board->whiteKing : &board->blackKing;
+	const std::uint64_t* pawns = asWhite ? &board->whitePawns : &board->blackPawns;
+	const std::uint64_t* rooks = asWhite ? &board->whiteRooks : &board->blackRooks;
+	const std::uint64_t* knights = asWhite ? &board->whiteKnights : &board->blackKnights;
+	const std::uint64_t* bishops = asWhite ? &board->whiteBishops : &board->blackBishops;
+	const std::uint64_t* queens = asWhite ? &board->whiteQueens : &board->blackQueens;
+	const std::uint64_t* king = asWhite ? &board->whiteKing : &board->blackKing;
 
 	std::uint64_t dangerSquares = 0;
 
 
 	for (std::uint8_t i = 0; i < 64; i++)
 	{
-		if ((*pawns >> i & 1) == 1) dangerSquares |= pawnPseudoMovesBitboard(board, &i, forWhite);
-		if ((*rooks >> i & 1) == 1) dangerSquares |= rookPseudoMovesBitboard(board, &i, forWhite);
-		if ((*knights >> i & 1) == 1) dangerSquares |= knightPseudoMovesBitboard(board, &i, forWhite);
-		if ((*bishops >> i & 1) == 1) dangerSquares |= bishopPseudoMovesBitboard(board, &i, forWhite);
-		if ((*queens >> i & 1) == 1) dangerSquares |= queenPseudoMovesBitboard(board, &i, forWhite);
-		if ((*king >> i & 1) == 1) dangerSquares |= kingPseudoMovesBitboard(board, &i, forWhite);
+		if ((*pawns >> i & 1) == 1) dangerSquares |= pawnPseudoMovesBitboard(board, &i, asWhite);
+		if ((*rooks >> i & 1) == 1) dangerSquares |= rookPseudoMovesBitboard(board, &i, asWhite);
+		if ((*knights >> i & 1) == 1) dangerSquares |= knightPseudoMovesBitboard(board, &i, asWhite);
+		if ((*bishops >> i & 1) == 1) dangerSquares |= bishopPseudoMovesBitboard(board, &i, asWhite);
+		if ((*queens >> i & 1) == 1) dangerSquares |= queenPseudoMovesBitboard(board, &i, asWhite);
+		if ((*king >> i & 1) == 1) dangerSquares |= kingPseudoMovesBitboard(board, &i, asWhite);
 	}
 
 	return dangerSquares;
