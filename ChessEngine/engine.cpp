@@ -11,14 +11,14 @@
 bool loadFEN(ChessBoard& board, const std::string& fen) {
     // Initialize variables to track position within the FEN string
     int rank = 7; // Start from rank 8 (index 7 in an array)
-    int file = 0; // Start from file A (index 0 in an array)
+    int file = 7; // Start from file A (index 0 in an array)
 
     for (char fenChar : fen) {
         
         if (fenChar == '/') {
             // Move to the next rank
             rank--;
-            file = 0;
+            file = 7;
             continue;
         }
 
@@ -28,7 +28,7 @@ bool loadFEN(ChessBoard& board, const std::string& fen) {
             continue;
         }
 
-        if (rank < 0 || file > 7) {
+        if (rank < 0 || file < 0) {
             // Invalid FEN string format
             return false;
         }
@@ -39,7 +39,7 @@ bool loadFEN(ChessBoard& board, const std::string& fen) {
             for (int i = 0; i < emptySquares; i++) {
                 // Clear the square (assuming you have a clearSquare function)
                 // clearSquare(board, rank, file);
-                file++;
+                file--;
             }
         }
         else {
@@ -87,7 +87,7 @@ bool loadFEN(ChessBoard& board, const std::string& fen) {
                 return false;
             }
             board.setPiece(piece, rank, file);
-            file++;
+            file--;
         }
     }
 
@@ -99,17 +99,20 @@ int main() {
     ChessBoard myBoard;
 
     // Example FEN string for starting position:
-    std::string fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+//    std::string fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+      std::string fenString = "rnbqkbnr / 1pp1pppp / 8 / p2p4 / 2B1P3 / 5N2 / PPPP1PPP / RNBQK2R";
+
+      
 
     // Load the FEN string into the ChessBoard
     if (loadFEN(myBoard, fenString)) {
         // Successfully loaded the FEN string, you can now use the myBoard struct.
         // ...
-
+        //std::cout << std::bitset<64>(myBoard.whiteKing) << std::endl;
 
         std::vector<ChessMove*> moves = MoveGeneration::generateLegalMoves(myBoard, true);
 
-        //std::cout << std::bitset<64>(myBoard.whitePawns) << std::endl;
+
 
         std::cout << moves.size() << std::endl;
 
