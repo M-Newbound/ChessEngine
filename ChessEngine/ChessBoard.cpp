@@ -1,6 +1,6 @@
 #include "ChessBoard.h"
 
-uint64_t ChessBoard::getAllWhitePieces()
+uint64_t ChessBoard::getAllWhitePieces() const
 {
     return whitePawns   |
            whiteRooks   |
@@ -10,7 +10,7 @@ uint64_t ChessBoard::getAllWhitePieces()
            whiteKing;
 }
 
-uint64_t ChessBoard::getAllBlackPieces()
+uint64_t ChessBoard::getAllBlackPieces() const
 {
     return blackPawns   |
            blackRooks   |
@@ -20,7 +20,7 @@ uint64_t ChessBoard::getAllBlackPieces()
            blackKing;
 }
 
-uint64_t ChessBoard::getAllPieces()
+uint64_t ChessBoard::getAllPieces() const
 {
     return getAllBlackPieces() | getAllWhitePieces();
 }
@@ -122,6 +122,3 @@ void ChessBoard::setPiece(PieceType piece, int rank, int file)
         break;
     }
 }
-
-
-

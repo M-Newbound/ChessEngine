@@ -16,20 +16,20 @@ class MoveGeneration
 {
 
 public:
-	static std::vector<ChessMove*> generateLegalMoves(ChessBoard& board, bool forWhite);
-    static bool isCheck(ChessBoard& board, bool forWhite);
-    static std::uint64_t getDangerSquares(ChessBoard& board, bool forWhite);
+	static std::vector<ChessMove> generateLegalMoves(const ChessBoard* board, bool forWhite);
+    static bool isCheck(const ChessBoard* board, bool forWhite);
+    static std::uint64_t getDangerSquares(const ChessBoard* board, bool forWhite);
 
 
 private:
 
     // Functions to generate moves for specific pieces
-    static std::uint64_t pawnPseudoMovesBitboard  (ChessBoard& board, const std::uint8_t square, bool forWhite);
-    static std::uint64_t knightPseudoMovesBitboard(ChessBoard& board, const std::uint8_t square, bool forWhite);
-    static std::uint64_t bishopPseudoMovesBitboard(ChessBoard& board, const std::uint8_t square, bool forWhite);
-    static std::uint64_t rookPseudoMovesBitboard  (ChessBoard& board, const std::uint8_t square, bool forWhite);
-    static std::uint64_t queenPseudoMovesBitboard (ChessBoard& board, const std::uint8_t square, bool forWhite);
-    static std::uint64_t kingPseudoMovesBitboard  (ChessBoard& board, const std::uint8_t square, bool forWhite);
+    static std::uint64_t pawnPseudoMovesBitboard  (const ChessBoard* board, const std::uint8_t* square, bool forWhite);
+    static std::uint64_t knightPseudoMovesBitboard(const ChessBoard* board, const std::uint8_t* square, bool forWhite);
+    static std::uint64_t bishopPseudoMovesBitboard(const ChessBoard* board, const std::uint8_t* square, bool forWhite);
+    static std::uint64_t rookPseudoMovesBitboard(const ChessBoard* board, const std::uint8_t* square, bool forWhite);
+    static std::uint64_t queenPseudoMovesBitboard(const ChessBoard* board, const std::uint8_t* square, bool forWhite);
+    static std::uint64_t kingPseudoMovesBitboard(const ChessBoard* board, const std::uint8_t* square, bool forWhite);
 
 };
 

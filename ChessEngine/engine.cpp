@@ -5,6 +5,8 @@
 #include "ChessBoard.h"
 #include "MoveGeneration.h"
 
+#include <chrono>
+
 #include <bitset>
 
 
@@ -106,19 +108,11 @@ int main() {
 
     // Load the FEN string into the ChessBoard
     if (loadFEN(myBoard, fenString)) {
-        // Successfully loaded the FEN string, you can now use the myBoard struct.
-        // ...
-        //std::cout << std::bitset<64>(myBoard.whiteKing) << std::endl;
-
-        std::vector<ChessMove*> moves = MoveGeneration::generateLegalMoves(myBoard, true);
+        
 
 
 
-        std::cout << moves.size() << std::endl;
-
-        for (ChessMove* move : moves) {
-            std::cout << "from: " << unsigned(move->fromSquare) << " to: " << unsigned(move->toSquare) << std::endl;
-        }
+        
     }
     else {
         std::cout << "Invalid FEN string format." << std::endl;

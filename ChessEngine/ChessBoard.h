@@ -38,13 +38,14 @@ struct ChessBoard
 	std::uint64_t blackKing = 0;
 
 	/* Commonly derived positions */
-	std::uint64_t getAllWhitePieces();
-	std::uint64_t getAllBlackPieces();
-	std::uint64_t getAllPieces();
+	std::uint64_t getAllWhitePieces() const;
+	std::uint64_t getAllBlackPieces() const;
+	std::uint64_t getAllPieces() const;
 	ChessBoard* copy() const;
 
 	void makeMove(std::uint8_t from, std::uint8_t to);
 	void setPiece(PieceType piece, int rank, int file);
 
 };
+
 
