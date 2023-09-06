@@ -97,6 +97,11 @@ bool loadFEN(ChessBoard& board, const std::string& fen) {
     return true;
 }
 
+
+void displayBoard(const ChessBoard* board) {
+
+}
+
 int main() {
     // Initialize a ChessBoard
     ChessBoard myBoard;
@@ -105,23 +110,25 @@ int main() {
       std::string fenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
       std::string fenExample = "rnbqkbnr / 1pp1pppp / 8 / p2p4 / 2B1P3 / 5N2 / PPPP1PPP / RNBQK2R";
       std::string fenBlackCheckmate = "3rkbnr/1p1bp3/1q1p3p/p5pQ/3n4/PPR5/5PPP/6K1";
+      std::string fenBlackNearCheckmate = "3rkbnr/1p1bp3/1q1p3p/p5p1/3n4/PPR2Q2/5PPP/6K1";
 
-      
 
     // Load the FEN string into the ChessBoard
-    if (loadFEN(myBoard, fenBlackCheckmate)) {
+    if (loadFEN(myBoard, fenExample)) {
         
 
-        std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(&myBoard, false);
+        //std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(&myBoard, false);
 
-        for (ChessMove move : moves) {
-            std::cout << "from " << unsigned(move.fromSquare) << " to " << unsigned(move.toSquare) << std::endl;
-        }
+        //for (ChessMove move : moves) {
+         //   std::cout << "from " << unsigned(move.fromSquare) << " to " << unsigned(move.toSquare) << std::endl;
+        //}
 
 
-        int32_t eval = BoardEvaluation::getEvaluation(&myBoard, false, true);
+        int32_t eval = BoardEvaluation::getEvaluation(&myBoard);
+        ChessMove bestMove = BoardEvaluation::getBestNextMove(&myBoard, 2, true);
         std::cout << eval << std::endl;
-        
+        std::cout << unsigned(bestMove.fromSquare) << std::endl;
+        std::cout << unsigned(bestMove.toSquare) << std::endl;
         
     }
     else {
