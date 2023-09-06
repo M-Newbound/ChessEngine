@@ -74,51 +74,47 @@ void ChessBoard::makeMove(std::uint8_t from, std::uint8_t to)
 
 }
 
-void ChessBoard::setPiece(PieceType piece, int rank, int file)
-{
-    // Calculate the bit for the given rank and file (assuming rank 0 is the lowest rank)
+void ChessBoard::setPiece(ChessBoard::PieceType piece, int rank, int file) {
     std::uint64_t bit = static_cast<std::uint64_t>(1) << (rank * 8 + file);
 
-    // Depending on the piece type, set the appropriate bit on the board
-    switch (piece) {
-    case WHITE_PAWN:
-        whitePawns |= bit;
-        break;
-    case WHITE_ROOK:
-        whiteRooks |= bit;
-        break;
-    case WHITE_KNIGHT:
-        whiteKnights |= bit;
-        break;
-    case WHITE_BISHOP:
-        whiteBishops |= bit;
-        break;
-    case WHITE_QUEEN:
-        whiteQueens |= bit;
-        break;
-    case WHITE_KING:
-        whiteKing |= bit;
-        break;
-    case BLACK_PAWN:
-        blackPawns |= bit;
-        break;
-    case BLACK_ROOK:
-        blackRooks |= bit;
-        break;
-    case BLACK_KNIGHT:
-        blackKnights |= bit;
-        break;
-    case BLACK_BISHOP:
-        blackBishops |= bit;
-        break;
-    case BLACK_QUEEN:
-        blackQueens |= bit;
-        break;
-    case BLACK_KING:
-        blackKing |= bit;
-        break;
-    default:
+    if (piece == WHITE_PAWN) whitePawns |= bit;
+    else if (piece == WHITE_ROOK) whiteRooks |= bit;
+    else if (piece == WHITE_KNIGHT) whiteKnights |= bit;
+    else if (piece == WHITE_BISHOP) whiteBishops |= bit;
+    else if (piece == WHITE_QUEEN) whiteQueens |= bit;
+    else if (piece == WHITE_KING) whiteKing |= bit;
+    else if (piece == BLACK_PAWN) blackPawns |= bit;
+    else if (piece == BLACK_ROOK) blackRooks |= bit;
+    else if (piece == BLACK_KNIGHT) blackKnights |= bit;
+    else if (piece == BLACK_BISHOP) blackBishops |= bit;
+    else if (piece == BLACK_QUEEN) blackQueens |= bit;
+    else if (piece == BLACK_KING) blackKing |= bit;
+    else {
         // Invalid piece type or empty square
-        break;
     }
+}
+
+
+ChessBoard::PieceType ChessBoard::getPieceTypeAtSquare(int rank, int file) const {
+    // Create a bitboard with a single 1 at the specified square
+    std::uint64_t squareMask = 1ULL << (rank * 8 + file);
+
+    // Check if the square is occupied by a white piece
+    if (whitePawns & squareMask) return ChessBoard::PieceType::WHITE_PAWN;
+    if (whiteRooks & squareMask) return ChessBoard::PieceType::WHITE_ROOK;
+    if (whiteKnights & squareMask) return ChessBoard::PieceType::WHITE_KNIGHT;
+    if (whiteBishops & squareMask) return ChessBoard::PieceType::WHITE_BISHOP;
+    if (whiteQueens & squareMask) return ChessBoard::PieceType::WHITE_QUEEN;
+    if (whiteKing & squareMask) return ChessBoard::PieceType::WHITE_KING;
+
+    // Check if the square is occupied by a black piece
+    if (blackPawns & squareMask) return ChessBoard::PieceType::BLACK_PAWN;
+    if (blackRooks & squareMask) return ChessBoard::PieceType::BLACK_ROOK;
+    if (blackKnights & squareMask) return ChessBoard::PieceType::BLACK_KNIGHT;
+    if (blackBishops & squareMask) return ChessBoard::PieceType::BLACK_BISHOP;
+    if (blackQueens & squareMask) return ChessBoard::PieceType::BLACK_QUEEN;
+    if (blackKing & squareMask) return ChessBoard::PieceType::BLACK_KING;
+
+    // If the square is empty, return EMPTY
+    return ChessBoard::PieceType::EMPTY;
 }

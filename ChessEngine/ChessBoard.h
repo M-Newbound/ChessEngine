@@ -44,7 +44,8 @@ struct ChessBoard
 	ChessBoard* copy() const;
 
 	void makeMove(std::uint8_t from, std::uint8_t to);
-	void setPiece(PieceType piece, int rank, int file);
+	void setPiece(ChessBoard::PieceType piece, int rank, int file);
+	ChessBoard::PieceType getPieceTypeAtSquare(int rank, int file) const;
 
 };
 
