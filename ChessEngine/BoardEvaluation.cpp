@@ -26,8 +26,8 @@ std::int32_t eval(const ChessBoard* board, bool color) {
 	const std::uint8_t numBishops = hammingDistance(bishops);
 	const std::uint8_t numQueens = hammingDistance(queens);
 
-	if (MoveGeneration::generateLegalMoves(board, color).size() == 0) return std::numeric_limits<int32_t>::min();
-	if (MoveGeneration::generateLegalMoves(board, !color).size() == 0) return std::numeric_limits<int32_t>::max();
+	if (MoveGeneration::generateColorsLegalMoves(board, color).size() == 0) return std::numeric_limits<int32_t>::min();
+	if (MoveGeneration::generateColorsLegalMoves(board, !color).size() == 0) return std::numeric_limits<int32_t>::max();
 
 
 	return numPawns * 100 + numRook * 500 + numKinghts * 300 + numBishops * 300 + numQueens * 800;
@@ -47,7 +47,7 @@ ChessMove BoardEvaluation::getBestNextMove(const ChessBoard* board, std::uint8_t
 	}
 
 	std::int32_t bestEval = isWhite ? std::numeric_limits<int32_t>::min() : std::numeric_limits<int32_t>::max();
-	std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(board, isWhite);
+	std::vector<ChessMove> moves = MoveGeneration::generateColorsLegalMoves(board, isWhite);
 	std::uint8_t bestFrom = 0;
 	std::uint8_t bestTo = 0;
 
@@ -76,7 +76,7 @@ int32_t BoardEvaluation::minimax(const ChessBoard* board, uint8_t depth, bool is
 	}
 
 	std::int32_t bestEval = isMaximizing ? std::numeric_limits<int32_t>::min() : std::numeric_limits<int32_t>::max();
-	std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(board, isMaximizing);
+	std::vector<ChessMove> moves = MoveGeneration::generateColorsLegalMoves(board, isMaximizing);
 
 	for (const ChessMove& move : moves) {
 		ChessBoard* newBoard = board->copy(); 
@@ -98,5 +98,5 @@ int32_t BoardEvaluation::minimax(const ChessBoard* board, uint8_t depth, bool is
 
 bool BoardEvaluation::isCheckMate(const ChessBoard* board, bool forWhite)
 {
-	return MoveGeneration::generateLegalMoves(board, forWhite).size() == 0;
+	return MoveGeneration::generateColorsLegalMoves(board, forWhite).size() == 0;
 }

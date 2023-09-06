@@ -2,7 +2,7 @@
 #include "ChessData.h"
 #include "MoveTables.h"
 
-std::vector<ChessMove> MoveGeneration::generateLegalMoves(const ChessBoard* board, bool forWhite)
+std::vector<ChessMove> MoveGeneration::generateColorsLegalMoves(const ChessBoard* board, bool forWhite)
 {
 	std::vector<ChessMove> pseudoMoves;
 	std::vector<ChessMove> legalMoves;
@@ -42,6 +42,43 @@ std::vector<ChessMove> MoveGeneration::generateLegalMoves(const ChessBoard* boar
 	return legalMoves;
 }
 
+std::vector<ChessMove> MoveGeneration::generateSquaresLegalMoves(const ChessBoard* board, std::uint8_t square, bool forWhite)
+{
+	std::vector<ChessMove> pseudoMoves;
+	std::vector<ChessMove> legalMoves;
+
+	// get all pseudo moves for pawns
+	const std::uint64_t* pawns = forWhite ? &board->whitePawns : &board->blackPawns;
+	const std::uint64_t* rooks = forWhite ? &board->whiteRooks : &board->blackRooks;
+	const std::uint64_t* knights = forWhite ? &board->whiteKnights : &board->blackKnights;
+	const std::uint64_t* bishops = forWhite ? &board->whiteBishops : &board->blackBishops;
+	const std::uint64_t* queens = forWhite ? &board->whiteQueens : &board->blackQueens;
+	const std::uint64_t* king = forWhite ? &board->whiteKing : &board->blackKing;
+
+	std::uint64_t currMoves = 0;
+
+	if (((*pawns >> square) & 1) == 1) currMoves = pawnPseudoMovesBitboard(board, &square, forWhite);
+	else if (((*rooks >> square) & 1) == 1) currMoves = rookPseudoMovesBitboard(board, &square, forWhite);
+	else if (((*knights >> square) & 1) == 1) currMoves = knightPseudoMovesBitboard(board, &square, forWhite);
+	else if (((*bishops >> square) & 1) == 1) currMoves = bishopPseudoMovesBitboard(board, &square, forWhite);
+	else if (((*queens >> square) & 1) == 1) currMoves = queenPseudoMovesBitboard(board, &square, forWhite);
+	else if (((*king >> square) & 1) == 1) currMoves = kingPseudoMovesBitboard(board, &square, forWhite);
+
+	if (currMoves == 0) return legalMoves;
+
+	for (std::uint8_t j = 0; j < 64; j++)
+	{
+		if (((currMoves >> j) & 1) != 1) continue;
+		ChessMove move(square, j);
+		ChessBoard newBoard = *board; // Create a copy of the board by value
+		newBoard.makeMove(move.fromSquare, move.toSquare);
+
+		if (!isCheck(&newBoard, forWhite)) legalMoves.push_back(move);
+	}
+
+	return legalMoves;
+}
+
 bool MoveGeneration::isCheck(const ChessBoard* board, bool forWhite)
 {
 	if (forWhite) {
@@ -65,12 +102,12 @@ std::uint64_t MoveGeneration::getDangerSquares(const ChessBoard* board, bool asW
 
 	for (std::uint8_t i = 0; i < 64; i++)
 	{
-		if ((*pawns >> i & 1) == 1) dangerSquares |= pawnPseudoMovesBitboard(board, &i, asWhite);
-		if ((*rooks >> i & 1) == 1) dangerSquares |= rookPseudoMovesBitboard(board, &i, asWhite);
-		if ((*knights >> i & 1) == 1) dangerSquares |= knightPseudoMovesBitboard(board, &i, asWhite);
-		if ((*bishops >> i & 1) == 1) dangerSquares |= bishopPseudoMovesBitboard(board, &i, asWhite);
-		if ((*queens >> i & 1) == 1) dangerSquares |= queenPseudoMovesBitboard(board, &i, asWhite);
-		if ((*king >> i & 1) == 1) dangerSquares |= kingPseudoMovesBitboard(board, &i, asWhite);
+		if (((*pawns >> i) & 1) == 1) dangerSquares |= pawnPseudoMovesBitboard(board, &i, asWhite);
+		if (((*rooks >> i) & 1) == 1) dangerSquares |= rookPseudoMovesBitboard(board, &i, asWhite);
+		if (((*knights >> i) & 1) == 1) dangerSquares |= knightPseudoMovesBitboard(board, &i, asWhite);
+		if (((*bishops >> i) & 1) == 1) dangerSquares |= bishopPseudoMovesBitboard(board, &i, asWhite);
+		if (((*queens >> i) & 1) == 1) dangerSquares |= queenPseudoMovesBitboard(board, &i, asWhite);
+		if (((*king >> i) & 1) == 1) dangerSquares |= kingPseudoMovesBitboard(board, &i, asWhite);
 	}
 
 	return dangerSquares;

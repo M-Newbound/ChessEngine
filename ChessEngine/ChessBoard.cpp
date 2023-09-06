@@ -56,8 +56,36 @@ bool movePiece(std::uint8_t from, std::uint8_t to, std::uint64_t& bitboard) {
     return true;
 }
 
+void ChessBoard::clearBoard()
+{
+    whitePawns = 0;
+    whiteRooks = 0;
+    whiteKnights = 0;
+    whiteBishops = 0;
+    whiteQueens = 0;
+    whiteKing = 0;
+    blackPawns = 0;
+    blackRooks = 0;
+    blackKnights = 0;
+    blackBishops = 0;
+    blackQueens = 0;
+    blackKing = 0;
+}
+
 void ChessBoard::makeMove(std::uint8_t from, std::uint8_t to)
 {
+    whitePawns = whitePawns & ~((std::uint64_t)1 << to);
+    whiteRooks = whiteRooks & ~((std::uint64_t)1 << to);
+    whiteKnights = whiteKnights & ~((std::uint64_t)1 << to);
+    whiteBishops = whiteBishops & ~((std::uint64_t)1 << to);
+    whiteQueens = whiteQueens & ~((std::uint64_t)1 << to);
+
+    blackPawns = blackPawns & ~((std::uint64_t)1 << to);
+    blackRooks = blackRooks & ~((std::uint64_t)1 << to);
+    blackKnights = blackKnights & ~((std::uint64_t)1 << to);
+    blackBishops = blackBishops & ~((std::uint64_t)1 << to);
+    blackQueens = blackQueens & ~((std::uint64_t)1 << to);
+
     if (movePiece(from, to, whitePawns)) return;
     if (movePiece(from, to, whiteRooks)) return;
     if (movePiece(from, to, whiteKnights)) return;
@@ -77,18 +105,18 @@ void ChessBoard::makeMove(std::uint8_t from, std::uint8_t to)
 void ChessBoard::setPiece(ChessBoard::PieceType piece, int rank, int file) {
     std::uint64_t bit = static_cast<std::uint64_t>(1) << (rank * 8 + file);
 
-    if (piece == WHITE_PAWN) whitePawns |= bit;
-    else if (piece == WHITE_ROOK) whiteRooks |= bit;
-    else if (piece == WHITE_KNIGHT) whiteKnights |= bit;
-    else if (piece == WHITE_BISHOP) whiteBishops |= bit;
-    else if (piece == WHITE_QUEEN) whiteQueens |= bit;
-    else if (piece == WHITE_KING) whiteKing |= bit;
-    else if (piece == BLACK_PAWN) blackPawns |= bit;
-    else if (piece == BLACK_ROOK) blackRooks |= bit;
-    else if (piece == BLACK_KNIGHT) blackKnights |= bit;
-    else if (piece == BLACK_BISHOP) blackBishops |= bit;
-    else if (piece == BLACK_QUEEN) blackQueens |= bit;
-    else if (piece == BLACK_KING) blackKing |= bit;
+    if (piece == PieceType::WHITE_PAWN) whitePawns |= bit;
+    else if (piece == PieceType::WHITE_ROOK) whiteRooks |= bit;
+    else if (piece == PieceType::WHITE_KNIGHT) whiteKnights |= bit;
+    else if (piece == PieceType::WHITE_BISHOP) whiteBishops |= bit;
+    else if (piece == PieceType::WHITE_QUEEN) whiteQueens |= bit;
+    else if (piece == PieceType::WHITE_KING) whiteKing |= bit;
+    else if (piece == PieceType::BLACK_PAWN) blackPawns |= bit;
+    else if (piece == PieceType::BLACK_ROOK) blackRooks |= bit;
+    else if (piece == PieceType::BLACK_KNIGHT) blackKnights |= bit;
+    else if (piece == PieceType::BLACK_BISHOP) blackBishops |= bit;
+    else if (piece == PieceType::BLACK_QUEEN) blackQueens |= bit;
+    else if (piece == PieceType::BLACK_KING) blackKing |= bit;
     else {
         // Invalid piece type or empty square
     }

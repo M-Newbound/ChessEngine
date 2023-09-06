@@ -1,5 +1,7 @@
 #include "Commands.h"
+#include "MoveGeneration.h"
 #include <iostream>
+#include <vector>
 
 void commands::displayBoard(const ChessBoard* board)
 {
@@ -28,7 +30,7 @@ void commands::displayBoard(const ChessBoard* board)
         if (i % 8 == 0) std::cout << std::endl;
     }
 
-    std::cout << "   '----------------" << std::endl << "     a b c e d f g h" << std::endl << std::endl;
+    std::cout << "   '----------------" << std::endl << "     a b c d e f g h" << std::endl << std::endl;
 }
 
 void commands::uci_uci()
@@ -100,14 +102,27 @@ void commands::uci_position(ChessBoard* board, std::string details)
 
         while (it != end) {
             std::string currMove = it->str();
-            std::cout << currMove << std::endl;
-
             int fromSquare = squareToNumeric(currMove.substr(0, 2));
             int toSquare = squareToNumeric(currMove.substr(2, 4));
 
-            // verify is psudo move
-
             // verify is legal move
+            std::vector<ChessMove> fromSquareLegals = MoveGeneration::generateSquaresLegalMoves(board, fromSquare, whitesMove);
+            
+            std::cout << fromSquare << ":" << toSquare << std::endl;
+
+            bool isLegal = false;
+            for (ChessMove move : fromSquareLegals) {
+                if (move.toSquare == toSquare) {
+                    isLegal = true;
+                    break;
+                }
+            }
+
+            if (!isLegal) {
+                std::cout << "illegal move: " << currMove.substr(0, 2) << "->" << currMove.substr(2, 4) << std::endl;
+                board->clearBoard();
+                return;
+            }
 
             board->makeMove(fromSquare, toSquare);
 
@@ -123,18 +138,7 @@ bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
     int rank = 7; // Start from rank 8 (index 7 in an array)
     int file = 7; // Start from file A (index 7 in an array)
 
-    board->whitePawns = 0;
-    board->whiteRooks = 0;
-    board->whiteKnights = 0;
-    board->whiteBishops = 0;
-    board->whiteQueens = 0;
-    board->whiteKing = 0;
-    board->blackPawns = 0;
-    board->blackRooks = 0;
-    board->blackKnights = 0;
-    board->blackBishops = 0;
-    board->blackQueens = 0;
-    board->blackKing = 0;
+    board->clearBoard();
 
     for (char fenChar : fen) {
         if (fenChar == '/') {
@@ -155,18 +159,18 @@ bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
             // Non-empty squares (pieces)
             ChessBoard::PieceType piece;
             switch (fenChar) {
-                case 'P': piece = ChessBoard::WHITE_PAWN; break;
-                case 'R': piece = ChessBoard::WHITE_ROOK; break;
-                case 'N': piece = ChessBoard::WHITE_KNIGHT; break;
-                case 'B': piece = ChessBoard::WHITE_BISHOP; break;
-                case 'Q': piece = ChessBoard::WHITE_QUEEN; break;
-                case 'K': piece = ChessBoard::WHITE_KING; break;
-                case 'p': piece = ChessBoard::BLACK_PAWN; break;
-                case 'r': piece = ChessBoard::BLACK_ROOK; break;
-                case 'n': piece = ChessBoard::BLACK_KNIGHT; break;
-                case 'b': piece = ChessBoard::BLACK_BISHOP; break;
-                case 'q': piece = ChessBoard::BLACK_QUEEN; break;
-                case 'k': piece = ChessBoard::BLACK_KING; break;
+                case 'P': piece = ChessBoard::PieceType::WHITE_PAWN; break;
+                case 'R': piece = ChessBoard::PieceType::WHITE_ROOK; break;
+                case 'N': piece = ChessBoard::PieceType::WHITE_KNIGHT; break;
+                case 'B': piece = ChessBoard::PieceType::WHITE_BISHOP; break;
+                case 'Q': piece = ChessBoard::PieceType::WHITE_QUEEN; break;
+                case 'K': piece = ChessBoard::PieceType::WHITE_KING; break;
+                case 'p': piece = ChessBoard::PieceType::BLACK_PAWN; break;
+                case 'r': piece = ChessBoard::PieceType::BLACK_ROOK; break;
+                case 'n': piece = ChessBoard::PieceType::BLACK_KNIGHT; break;
+                case 'b': piece = ChessBoard::PieceType::BLACK_BISHOP; break;
+                case 'q': piece = ChessBoard::PieceType::BLACK_QUEEN; break;
+                case 'k': piece = ChessBoard::PieceType::BLACK_KING; break;
                 default: return false; // Invalid character in FEN string
             }
             board->setPiece(piece, rank, file);

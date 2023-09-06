@@ -5,7 +5,7 @@
 
 struct ChessBoard
 {
-	enum PieceType {
+	enum class PieceType {
 		EMPTY,
 		WHITE_PAWN,
 		WHITE_ROOK,
@@ -41,8 +41,10 @@ struct ChessBoard
 	std::uint64_t getAllWhitePieces() const;
 	std::uint64_t getAllBlackPieces() const;
 	std::uint64_t getAllPieces() const;
+	
 	ChessBoard* copy() const;
-
+	
+	void clearBoard();
 	void makeMove(std::uint8_t from, std::uint8_t to);
 	void setPiece(ChessBoard::PieceType piece, int rank, int file);
 	ChessBoard::PieceType getPieceTypeAtSquare(int rank, int file) const;

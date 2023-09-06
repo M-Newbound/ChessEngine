@@ -33,10 +33,13 @@ int main() {
             commands::displayBoard(&gameBoard);
         }
 
-        if (std::regex_match(command, commands::uci_positionCmd)) {
+        else if (std::regex_match(command, commands::uci_positionCmd)) {
             commands::uci_position(&gameBoard, command);
         }
 
+        else {
+            std::cout << "unknown command" << std::endl;
+        }
         
     }
 
@@ -55,7 +58,7 @@ int main() {
 
 
 
-        //std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(&myBoard, false);
+        //std::vector<ChessMove> moves = MoveGeneration::generateColorsLegalMoves(&myBoard, false);
 
         //for (ChessMove move : moves) {
          //   std::cout << "from " << unsigned(move.fromSquare) << " to " << unsigned(move.toSquare) << std::endl;
