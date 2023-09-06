@@ -37,63 +37,62 @@ std::int32_t eval(const ChessBoard* board, bool color) {
 std::int32_t BoardEvaluation::getEvaluation(const ChessBoard* board)
 {
 
-	return eval(board, true) - eval(board, false);
+	return eval(board, true);
 }
 
 ChessMove BoardEvaluation::getBestNextMove(const ChessBoard* board, std::uint8_t depth, bool isWhite)
 {
-	if (depth == 0 || BoardEvaluation::isCheckMate(board, true) || BoardEvaluation::isCheckMate(board, false)) {
-		return ChessMove(0, 0, getEvaluation(board));
-	}
-
-	std::int32_t bestEval = isWhite ? std::numeric_limits<int32_t>::min() : std::numeric_limits<int32_t>::max();
-	std::vector<ChessMove> moves = MoveGeneration::generateColorsLegalMoves(board, isWhite);
-	std::uint8_t bestFrom = 0;
-	std::uint8_t bestTo = 0;
-
-	for (ChessMove& move : moves) {
-		ChessBoard* newBoard = board->copy();
-		newBoard->makeMove(move.fromSquare, move.toSquare);
-		int32_t eval = BoardEvaluation::minimax(newBoard, depth - 1, !isWhite);
-		delete newBoard;
-
-		if ((isWhite && eval > bestEval) || (!isWhite && eval < bestEval)) {
-			bestEval = eval;
-			bestFrom = move.fromSquare;
-			bestTo = move.toSquare;
-		}
-	}
-
-	return ChessMove(bestFrom, bestTo);
+	std::pair<int, ChessMove> bestMove = negaMax(board, depth, isWhite);
+	return bestMove.second;
 }
 
-
-
-int32_t BoardEvaluation::minimax(const ChessBoard* board, uint8_t depth, bool isMaximizing)
+std::pair<int, ChessMove> BoardEvaluation::negaMax(const ChessBoard* board, int depth, bool currPlayer)
 {
-	if (depth == 0 || BoardEvaluation::isCheckMate(board, true) || BoardEvaluation::isCheckMate(board, false)) {
-		return getEvaluation(board);
+	if (depth == 0) {
+		return std::pair<int, ChessMove>(eval(board, currPlayer), ChessMove(0, 0));
 	}
 
-	std::int32_t bestEval = isMaximizing ? std::numeric_limits<int32_t>::min() : std::numeric_limits<int32_t>::max();
-	std::vector<ChessMove> moves = MoveGeneration::generateColorsLegalMoves(board, isMaximizing);
+	if (isCheckMate(board, currPlayer)) {
+		return std::pair<int, ChessMove>(BoardEvaluation::bestScore, ChessMove(0, 0));
+	}
 
-	for (const ChessMove& move : moves) {
-		ChessBoard* newBoard = board->copy(); 
-		newBoard->makeMove(move.fromSquare, move.toSquare);
-		int32_t eval = minimax(newBoard, depth - 1, !isMaximizing);
-		delete newBoard;
+	ChessMove bestMove(0, 0);
+	int bestScore = -BoardEvaluation::bestScore - 1;	// -1 just ensures you can move into a checkmated pos
 
-		if (isMaximizing) {
-			bestEval = std::max(bestEval, eval);
-		}
-		else {
-			bestEval = std::min(bestEval, eval);
+	for (ChessMove move : MoveGeneration::generateColorsLegalMoves(board, currPlayer)) {
+		ChessBoard newBoard = *board;
+		newBoard.makeMove(move.fromSquare, move.toSquare);
+		std::pair<int, ChessMove> results = negaMax(&newBoard, depth - 1, !currPlayer);
+
+		results.first = -1 * results.first;
+
+		if (results.first > bestScore) {
+			bestScore = results.first;
+			bestMove = move;
 		}
 	}
 
-	return bestEval;
+	return std::pair<int, ChessMove>(bestScore, bestMove);
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 bool BoardEvaluation::isCheckMate(const ChessBoard* board, bool forWhite)

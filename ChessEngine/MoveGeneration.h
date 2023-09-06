@@ -6,12 +6,14 @@
 
 
 struct ChessMove {
+public:
     ChessMove(std::uint8_t from, std::uint8_t to) : fromSquare(from), toSquare(to) {};
     // Copy constructor
     ChessMove(const ChessMove& other) : fromSquare(other.fromSquare), toSquare(other.toSquare) {}
+    
 
-	const std::uint8_t fromSquare;
-	const std::uint8_t toSquare;
+	std::uint8_t fromSquare;
+	std::uint8_t toSquare;
 };
 
 class MoveGeneration

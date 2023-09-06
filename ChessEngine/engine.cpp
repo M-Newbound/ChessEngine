@@ -37,6 +37,18 @@ int main() {
             commands::uci_position(&gameBoard, command);
         }
 
+        else if (std::regex_match(command, commands::uci_uciCmd)) {
+            commands::uci_uci();
+        }
+
+        else if (std::regex_match(command, commands::uci_uciCmd)) {
+            commands::uci_uci();
+        }
+
+        else if (std::regex_match(command, commands::uci_goCmd)) {
+            commands::uci_go(&gameBoard, command);
+        }
+
         else {
             std::cout << "unknown command" << std::endl;
         }

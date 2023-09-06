@@ -1,5 +1,6 @@
 #include "Commands.h"
 #include "MoveGeneration.h"
+#include "BoardEvaluation.h"
 #include <iostream>
 #include <vector>
 
@@ -108,8 +109,6 @@ void commands::uci_position(ChessBoard* board, std::string details)
             // verify is legal move
             std::vector<ChessMove> fromSquareLegals = MoveGeneration::generateSquaresLegalMoves(board, fromSquare, whitesMove);
             
-            std::cout << fromSquare << ":" << toSquare << std::endl;
-
             bool isLegal = false;
             for (ChessMove move : fromSquareLegals) {
                 if (move.toSquare == toSquare) {
@@ -131,6 +130,16 @@ void commands::uci_position(ChessBoard* board, std::string details)
         }
     }
 }
+
+
+
+void commands::uci_go(ChessBoard* board, std::string details)
+{
+    ChessMove bestMove = BoardEvaluation::getBestNextMove(board, 3, true);
+    std::cout << "\nBest Move  " << unsigned(bestMove.fromSquare) << " " << unsigned(bestMove.toSquare) << std::endl;
+}
+
+
 
 bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
     if (fen.empty()) return false; // Empty FEN string
