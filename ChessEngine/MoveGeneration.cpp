@@ -15,6 +15,7 @@ std::vector<ChessMove> MoveGeneration::generateColorsLegalMoves(const ChessBoard
 	const std::uint64_t* queens = forWhite ? &board->whiteQueens : &board->blackQueens;
 	const std::uint64_t* king = forWhite ? &board->whiteKing : &board->blackKing;
 
+	// replace this loop with a (next sig bit) for forWhite's pieces
 	for (std::uint8_t i = 0; i < 64; i++)
 	{
 		std::uint64_t currMoves = 0;
@@ -28,6 +29,7 @@ std::vector<ChessMove> MoveGeneration::generateColorsLegalMoves(const ChessBoard
 
 		if (currMoves == 0) continue;
 
+		// replace this with next sig bit 
 		for (std::uint8_t j = 0; j < 64; j++)
 		{
 			if (((currMoves >> j) & 1) != 1) continue;
