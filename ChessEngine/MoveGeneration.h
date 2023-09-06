@@ -6,11 +6,12 @@
 
 
 struct ChessMove {
-    ChessMove(std::uint8_t from, std::uint8_t to, std::int32_t eval = 0) : fromSquare(from), toSquare(to) { eval = eval; };
+    ChessMove(std::uint8_t from, std::uint8_t to) : fromSquare(from), toSquare(to) {};
+    // Copy constructor
+    ChessMove(const ChessMove& other) : fromSquare(other.fromSquare), toSquare(other.toSquare) {}
+
 	const std::uint8_t fromSquare;
 	const std::uint8_t toSquare;
-    std::int32_t eval = 0;
-
 };
 
 class MoveGeneration
