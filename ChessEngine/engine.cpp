@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cctype>
+#include <regex>
 #include <vector>
 #include "ChessBoard.h"
 #include "MoveGeneration.h"
@@ -16,7 +17,34 @@
 
 int main() {
     // Initialize a ChessBoard
-    ChessBoard myBoard;
+    ChessBoard gameBoard;
+
+
+    bool setup = false;
+
+    // handle command identification on this thread, handle command processing on a seperate thread.
+    while (true)
+    {
+
+        std::string command;
+        std::getline(std::cin, command);
+        
+        if (std::regex_match(command, commands::displayboardCmdRegex)) {
+            commands::displayBoard(&gameBoard);
+        }
+
+        if (std::regex_match(command, commands::uci_positionCmd)) {
+            commands::uci_position(&gameBoard, command);
+        }
+
+        
+    }
+
+
+
+
+
+
 
     // Example FEN string for starting position:
       std::string fenStart = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
@@ -25,9 +53,7 @@ int main() {
       std::string fenBlackNearCheckmate = "3rkbnr/1p1bp3/1q1p3p/p5p1/3n4/PPR2Q2/5PPP/6K1";
 
 
-    // Load the FEN string into the ChessBoard
-    if (commands::loadFEN(myBoard, fenBlackNearCheckmate)) {
-        
+
 
         //std::vector<ChessMove> moves = MoveGeneration::generateLegalMoves(&myBoard, false);
 
@@ -35,13 +61,6 @@ int main() {
          //   std::cout << "from " << unsigned(move.fromSquare) << " to " << unsigned(move.toSquare) << std::endl;
         //}
 
-
-        commands::displayBoard(&myBoard);
-        
-    }
-    else {
-        std::cout << "Invalid FEN string format." << std::endl;
-    }
 
 
 
