@@ -6,10 +6,10 @@ A chess engine is a computer program that calculates and suggests the best moves
 ## Overview
 To create a functional chess engine, several key features need to be considered:
 
-- Board Representation: Find a way to represent the current state of the chessboard in an effeicent manner.
-- Move Generation: Develop a method to generate all **legal** moves for each piece on the board based on the rules of chess.
-- Position Evaluation: Create an evaluation function that can assess the relative strength of each side's position.
-- Search Algorithms: Implement a search over these legal moves to find the move which gives us the strongest position.
+- **Board Representation**: Find a way to represent the current state of the chessboard in an effeicent manner.
+- **Move Generation**: Develop a method to generate all **legal** moves for each piece on the board based on the rules of chess.
+- **Position Evaluation**: Create an evaluation function that can assess the relative strength of each side's position.
+- **Search Algorithms**: Implement a search over these legal moves to find the move which gives us the strongest position.
 
 Lets explore these key ideas in a bit bore depth, and understand how we can create a chess engine of our own.
 
@@ -34,14 +34,14 @@ When it comes to move generation in a chess engine, efficiency is paramount. Gen
 - Generating moves dynamically during gameplay can be inefficient. Calculating all possible moves for each piece on the board in real-time is a resource-intensive task. Instead, we aim for a more optimized approach to keep the game running smoothly.
 
 #### **Using Lookup Tables for King and Knight Moves**
--For certain pieces like the king and knight, we can precompute their possible moves and store them in lookup tables. This eliminates the need for complex calculations during gameplay. When a piece of these types needs to move, we simply consult the precomputed table, resulting in rapid and efficient move generation.
+- For certain pieces like the king and knight, we can precompute their possible moves and store them in lookup tables. This eliminates the need for complex calculations during gameplay. When a piece of these types needs to move, we simply consult the precomputed table, resulting in rapid and efficient move generation.
 
 #### **Leveraging Magic Bitboards for Sliding Pieces**
--Magic bitboards are a fascinating technique that accelerates move generation for sliding pieces, including rooks, bishops, and queens. They allow us to define lookup tables based on the blocking patterns of other pieces around a sliding piece.
+- Magic bitboards are a fascinating technique that accelerates move generation for sliding pieces, including rooks, bishops, and queens. They allow us to define lookup tables based on the blocking patterns of other pieces around a sliding piece.
 
-##### **The Magic Behind Magic Bitboards**
+#### **The Magic Behind Magic Bitboards**
 - Magic Numbers: Magic numbers serve as perfect hashing functions for each square and piece type. These numbers are carefully chosen so that when combined with the current occupancy of the board, they produce a unique index into a precomputed table.
--Efficient Move Generation: By using these magic numbers, we can determine all possible moves of a sliding piece with minimal computational effort. The magic bitboard approach greatly speeds up move generation for these complex pieces.
+- Efficient Move Generation: By using these magic numbers, we can determine all possible moves of a sliding piece with minimal computational effort. The magic bitboard approach greatly speeds up move generation for these complex pieces.
 
 #### **Bit Manipulation for Pawn Moves**
 - Pawns, with their unique two-step initial move and capture mechanics, can efficiently generate moves using bit manipulation. By shifting and masking the pawn's position on a bitboard, we can quickly identify all valid pawn moves, making pawn move generation both speedy and elegant.
