@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 
-void commands::displayBoard(const ChessBoard* board)
+void commands::engine_display(const ChessBoard* board)
 {
     std::cout << std::endl;
     for (std::int8_t i = 63; i >= 0; i--)
@@ -52,16 +52,27 @@ void commands::uci_newGame()
 
 int squareToNumeric(const std::string& square) {
     if (square.length() != 2) {
-        // Handle invalid input
         return -1; // Or some other error code
     }
 
     int file = square[0] - 'a'; // Assuming 'a' to 'h' for files
     int rank = square[1] - '1'; // Assuming '1' to '8' for ranks
 
-    
-
     return rank * 8 + (7 - file);
+}
+
+std::string numericToSquare(int numeric) {
+    if (numeric < 0 || numeric >= 64) {
+        return ""; // Or some other error handling
+    }
+
+    int rank = numeric / 8;
+    int file = 7 - (numeric % 8); // Reverse calculation
+
+    char fileChar = 'a' + file;
+    char rankChar = '1' + rank;
+
+    return std::string(1, fileChar) + std::string(1, rankChar);
 }
 
 void commands::uci_position(ChessBoard* board, std::string details)
@@ -135,7 +146,7 @@ void commands::uci_position(ChessBoard* board, std::string details)
 
 void commands::uci_go(ChessBoard* board, std::string details)
 {
-    ChessMove bestMove = BoardEvaluation::getBestNextMove(board, 3, true);
+    ChessMove bestMove = BoardEvaluation::getBestNextMove(board, 5, true);
     std::cout << "\nBest Move  " << unsigned(bestMove.fromSquare) << " " << unsigned(bestMove.toSquare) << std::endl;
 }
 
@@ -188,4 +199,46 @@ bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
     }
 
     return true;
+}
+
+void commands::engine_moves(ChessBoard* board, std::string details)
+{
+    //details.erase(std::remove_if(details.begin(), details.end(), ::isspace), details.end());
+
+    std::smatch match;
+    if (std::regex_match(details, match, engine_movesCmd)) {
+
+        int square = squareToNumeric(match[1]);
+        bool color = match[2] == "w";
+        
+        std::vector<ChessMove> moves = MoveGeneration::generateSquaresLegalMoves(board, square, color);
+
+        for (ChessMove move : moves) {
+            std::cout << numericToSquare(move.toSquare) << " ";
+        }
+
+        std::cout << std::endl;
+    }
+}
+
+void commands::engine_isCheck(ChessBoard* board, std::string details)
+{
+    std::smatch match;
+    if (std::regex_match(details, match, engine_isCheckCmd)) {
+        bool color = match[1] == "w";
+
+        std::string result = MoveGeneration::isCheck(board, color) ? "yes" : "no";
+        std::cout << result << std::endl;
+    }
+}
+
+void commands::engine_isMate(ChessBoard* board, std::string details)
+{
+    std::smatch match;
+    if (std::regex_match(details, match, engine_isMateCmd)) {
+        bool color = match[1] == "w";
+
+        std::string result = BoardEvaluation::isCheckMate(board, color) ? "yes" : "no";
+        std::cout << result << std::endl;
+    }
 }

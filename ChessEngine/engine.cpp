@@ -29,8 +29,8 @@ int main() {
         std::string command;
         std::getline(std::cin, command);
         
-        if (std::regex_match(command, commands::displayboardCmdRegex)) {
-            commands::displayBoard(&gameBoard);
+        if (std::regex_match(command, commands::engine_displayCmd)) {
+            commands::engine_display(&gameBoard);
         }
 
         else if (std::regex_match(command, commands::uci_positionCmd)) {
@@ -47,6 +47,18 @@ int main() {
 
         else if (std::regex_match(command, commands::uci_goCmd)) {
             commands::uci_go(&gameBoard, command);
+        }
+
+        else if (std::regex_match(command, commands::engine_movesCmd)) {
+            commands::engine_moves(&gameBoard, command);
+        }
+
+        else if (std::regex_match(command, commands::engine_isCheckCmd)) {
+            commands::engine_isCheck(&gameBoard, command);
+        }
+
+        else if (std::regex_match(command, commands::engine_isMateCmd)) {
+            commands::engine_isMate(&gameBoard, command);
         }
 
         else {

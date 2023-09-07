@@ -37,17 +37,19 @@ std::int32_t eval(const ChessBoard* board, bool color) {
 std::int32_t BoardEvaluation::getEvaluation(const ChessBoard* board)
 {
 
-	return eval(board, true);
+	return eval(board, true) - eval(board, false);
 }
 
 ChessMove BoardEvaluation::getBestNextMove(const ChessBoard* board, std::uint8_t depth, bool isWhite)
 {
-	std::pair<int, ChessMove> bestMove = negaMax(board, depth, isWhite);
+	int alpha = std::numeric_limits<int>::min(); 
+	int beta = std::numeric_limits<int>::max();
+
+	std::pair<int, ChessMove> bestMove = negaMax(board, depth, alpha, beta, isWhite);
 	return bestMove.second;
 }
 
-std::pair<int, ChessMove> BoardEvaluation::negaMax(const ChessBoard* board, int depth, bool currPlayer)
-{
+std::pair<int, ChessMove> BoardEvaluation::negaMax(const ChessBoard* board, int depth, int alpha, int beta, bool currPlayer) {
 	if (depth == 0) {
 		return std::pair<int, ChessMove>(eval(board, currPlayer), ChessMove(0, 0));
 	}
@@ -57,23 +59,29 @@ std::pair<int, ChessMove> BoardEvaluation::negaMax(const ChessBoard* board, int 
 	}
 
 	ChessMove bestMove(0, 0);
-	int bestScore = -BoardEvaluation::bestScore - 1;	// -1 just ensures you can move into a checkmated pos
+	int bestScore = -BoardEvaluation::bestScore - 1;
 
 	for (ChessMove move : MoveGeneration::generateColorsLegalMoves(board, currPlayer)) {
 		ChessBoard newBoard = *board;
 		newBoard.makeMove(move.fromSquare, move.toSquare);
-		std::pair<int, ChessMove> results = negaMax(&newBoard, depth - 1, !currPlayer);
+		std::pair<int, ChessMove> results = negaMax(&newBoard, depth - 1, -beta, -alpha, !currPlayer);
 
-		results.first = -1 * results.first;
+		results.first = -results.first;
 
 		if (results.first > bestScore) {
 			bestScore = results.first;
 			bestMove = move;
 		}
+
+		alpha = std::max(alpha, bestScore);
+
+		if (alpha >= beta) {
+			// Prune remaining branches
+			break;
+		}
 	}
 
 	return std::pair<int, ChessMove>(bestScore, bestMove);
-
 }
 
 

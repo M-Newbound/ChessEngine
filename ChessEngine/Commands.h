@@ -8,9 +8,12 @@ namespace commands {
     // commo
 
     // engine specific commands
-    const std::regex displayboardCmdRegex(R"(.*display\s*)");
+    const std::regex engine_displayCmd(R"(.*display\s*)");
+    const std::regex engine_movesCmd(R"(moves ([a-h][1-8]) ([wb]))");
+    const std::regex engine_isCheckCmd(R"(check ([wb]))");
+    const std::regex engine_isMateCmd(R"(mate ([wb]))");
 
-    void displayBoard(const ChessBoard* board);
+
 
     // UCI specific commands
     const std::regex uci_uciCmd(R"(.*uci\s*)");
@@ -28,9 +31,14 @@ namespace commands {
     void uci_position(ChessBoard* board, std::string details);
     void uci_go(ChessBoard* board, std::string details);
     
-    // helper functions
-    bool loadFEN(ChessBoard* board, const std::string& fen);
+    // non uci functions
+    void engine_display(const ChessBoard* board);
+    void engine_moves(ChessBoard* board, std::string details);
+    void engine_isCheck(ChessBoard* board, std::string details);
+    void engine_isMate(ChessBoard* board, std::string details);
 
+
+    bool loadFEN(ChessBoard* board, const std::string& fen);
 }
 
 
