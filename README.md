@@ -54,7 +54,6 @@ Magic numbers are the key to solving this problem. They serve as the defining co
 
 maigic_index = f(blocking_pieces_bitboard, magic_number, shift_degree) = (blocking_pieces_bitboard * magic_number) >> shift_degree
 
-
 **Simplifying Move Generation with Magic Numbers
 Now, let's break down how magic numbers streamline move generation:**
 
