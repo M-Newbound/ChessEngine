@@ -38,10 +38,30 @@ When it comes to move generation in a chess engine, efficiency is paramount. Gen
 
 #### **Leveraging Magic Bitboards for Sliding Pieces**
 - Magic bitboards are a fascinating technique that accelerates move generation for sliding pieces, including rooks, bishops, and queens. They allow us to define lookup tables based on the blocking patterns of other pieces around a sliding piece.
-
-#### **The Magic Behind Magic Bitboards**
-- Magic Numbers: Magic numbers serve as perfect hashing functions for each square and piece type. These numbers are carefully chosen so that when combined with the current occupancy of the board, they produce a unique index into a precomputed table.
-- Efficient Move Generation: By using these magic numbers, we can determine all possible moves of a sliding piece with minimal computational effort. The magic bitboard approach greatly speeds up move generation for these complex pieces.
+- I will discuss these in depth shortly, but for now, just trust me, they are magic.
 
 #### **Bit Manipulation for Pawn Moves**
 - Pawns, with their unique two-step initial move and capture mechanics, can efficiently generate moves using bit manipulation. By shifting and masking the pawn's position on a bitboard, we can quickly identify all valid pawn moves, making pawn move generation both speedy and elegant.
+
+## Magic Bitboards 
+Magic bitboards are a powerful technique used in chess engines to efficiently generate moves for sliding pieces, such as rooks, bishops, and queens. At their core, magic bitboards are a form of precomputed lookup table. However, their true genius lies in their ability to provide rapid move generation without requiring an enormous amount of memory.
+
+**The Challenge of Storing All Possible Move Patterns**
+To appreciate the significance of magic numbers in magic bitboards, it's essential to understand the challenge we face. Sliding pieces can have a multitude of potential move patterns based on their position and the positions of blocking pieces. Storing every possible move pattern for each square and blocking configuration would demand an impractical amount of memory.
+
+**Introducing Magic Numbers**
+Magic numbers are the key to solving this problem. They serve as the defining components of a perfect hashing function for each blocking pattern. These magic numbers are carefully chosen to ensure that, for any given square on the chessboard, every possible blocking pattern that can occur at that square has a unique hash or index. Magic numbers can be any 64bit int, and so the method I used to find them was just random trial an error.
+
+maigic_index = f(blocking_pieces_bitboard, magic_number, shift_degree) = (blocking_pieces_bitboard * magic_number) >> shift_degree
+
+
+**Simplifying Move Generation with Magic Numbers
+Now, let's break down how magic numbers streamline move generation:**
+
+- Blocker Mask: First, we obtain the blocker mask for a specific square. This mask indicates the positions of all blocking pieces relative to the sliding piece we want to move. It essentially marks the potential obstacles.
+
+- Applying the Magic Formula: Here's where the magic happens. We apply the perfect hash formula using the chosen magic number and shift degree. This computation condenses the complex information of the blocking pattern into a single index.
+
+- Accessing the Lookup Table: Finally, we use the result of our computation as an index to access a precomputed lookup table. This table provides us with all the possible move directions and target squares for the sliding piece, considering the specific blocking pattern.
+
+In essence, magic numbers enable us to find all possible moves of a sliding piece with minimal computational effort. By cleverly mapping complex blocking patterns to unique indices, we optimize move generation and ensure that our chess engine operates at peak efficiency.
