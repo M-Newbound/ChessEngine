@@ -44,6 +44,7 @@ void commands::uci_debug(std::string mode)
 
 void commands::uci_isready()
 {
+    std::cout << "readyok" << std::endl;
 }
 
 void commands::uci_newGame()
@@ -51,20 +52,14 @@ void commands::uci_newGame()
 }
 
 int squareToNumeric(const std::string& square) {
-    if (square.length() != 2) {
-        return -1; // Or some other error code
-    }
-
-    int file = square[0] - 'a'; // Assuming 'a' to 'h' for files
-    int rank = square[1] - '1'; // Assuming '1' to '8' for ranks
+    
+    int file = square[0] - 'a';
+    int rank = square[1] - '1';
 
     return rank * 8 + (7 - file);
 }
 
 std::string numericToSquare(int numeric) {
-    if (numeric < 0 || numeric >= 64) {
-        return ""; // Or some other error handling
-    }
 
     int rank = numeric / 8;
     int file = 7 - (numeric % 8); // Reverse calculation
@@ -146,8 +141,14 @@ void commands::uci_position(ChessBoard* board, std::string details)
 
 void commands::uci_go(ChessBoard* board, std::string details)
 {
-    ChessMove bestMove = BoardEvaluation::getBestNextMove(board, 5, true);
-    std::cout << "\nBest Move  " << unsigned(bestMove.fromSquare) << " " << unsigned(bestMove.toSquare) << std::endl;
+    std::smatch match;
+    std::regex_match(details, match, uci_goCmd);
+
+    ChessMove bestMove = BoardEvaluation::getBestNextMove(board, stoi(match[2]), match[1] == "w");
+    std::string fromSq = numericToSquare(bestMove.fromSquare);
+    std::string toSq = numericToSquare(bestMove.toSquare);
+
+    std::cout << "\nBest Move " << fromSq << toSq << std::endl;
 }
 
 
@@ -168,7 +169,7 @@ bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
             continue;
         }
         if (rank < 0 || file < 0) return false; // Invalid FEN string format
-
+        
        
         else if (isdigit(fenChar)) {
             // Empty squares
@@ -203,8 +204,6 @@ bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
 
 void commands::engine_moves(ChessBoard* board, std::string details)
 {
-    //details.erase(std::remove_if(details.begin(), details.end(), ::isspace), details.end());
-
     std::smatch match;
     if (std::regex_match(details, match, engine_movesCmd)) {
 
@@ -240,5 +239,17 @@ void commands::engine_isMate(ChessBoard* board, std::string details)
 
         std::string result = BoardEvaluation::isCheckMate(board, color) ? "yes" : "no";
         std::cout << result << std::endl;
+    }
+}
+
+void commands::engine_piece(ChessBoard* board, std::string details)
+{
+    std::smatch match;
+    if (std::regex_match(details, match, engine_pieceCmd)) {
+        std::string squareStr = match[1];
+        int square = squareToNumeric(squareStr);
+
+        std::cout << ChessBoard::pieceTypeToFen(board->getPieceTypeAtSquare(square/8, square%8)) << std::endl;
+    
     }
 }

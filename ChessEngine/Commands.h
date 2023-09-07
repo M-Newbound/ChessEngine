@@ -12,6 +12,7 @@ namespace commands {
     const std::regex engine_movesCmd(R"(moves ([a-h][1-8]) ([wb]))");
     const std::regex engine_isCheckCmd(R"(check ([wb]))");
     const std::regex engine_isMateCmd(R"(mate ([wb]))");
+    const std::regex engine_pieceCmd(R"(piece ([a-h][1-8]))");
 
 
 
@@ -21,7 +22,7 @@ namespace commands {
     const std::regex uci_isreadyCmd(R"(.*isready\s*)");
     const std::regex uci_newgameCmd(R"(.*ucinewgame\s*)");
     const std::regex uci_positionCmd(R"((.*position\s*)(startpos|((?:[rnbqkpRNBQKP1-8]+/){7}[rnbqkpRNBQKP1-8]+)\s*([bw])\s*((-|[KQkq]){1,4})\s*(-|[a-h][1-8])\s*((\d)+\s*(\d)+))\s*(?:moves\s*(([a-h]\s*[1-8]\s*[a-h]\s*[1-8]\s*)+))?$)");
-    const std::regex uci_goCmd(R"(go)");
+    const std::regex uci_goCmd(R"(go ([w]|[b]) ([1-9]))");
 
 
     void uci_uci();
@@ -36,6 +37,7 @@ namespace commands {
     void engine_moves(ChessBoard* board, std::string details);
     void engine_isCheck(ChessBoard* board, std::string details);
     void engine_isMate(ChessBoard* board, std::string details);
+    void engine_piece(ChessBoard* board, std::string details);
 
 
     bool loadFEN(ChessBoard* board, const std::string& fen);

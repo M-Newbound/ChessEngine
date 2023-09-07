@@ -42,8 +42,8 @@ std::int32_t BoardEvaluation::getEvaluation(const ChessBoard* board)
 
 ChessMove BoardEvaluation::getBestNextMove(const ChessBoard* board, std::uint8_t depth, bool isWhite)
 {
-	int alpha = std::numeric_limits<int>::min(); 
-	int beta = std::numeric_limits<int>::max();
+	constexpr int alpha = std::numeric_limits<int>::min(); 
+	constexpr int beta = std::numeric_limits<int>::max();
 
 	std::pair<int, ChessMove> bestMove = negaMax(board, depth, alpha, beta, isWhite);
 	return bestMove.second;
