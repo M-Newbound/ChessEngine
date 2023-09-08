@@ -91,4 +91,9 @@ In small domain application (eg naughts and crosses) minimax can solve every pos
 Combining the Negamax algorithm with alpha-beta pruning is a powerful approach to position evaluation. It systematically explores the game tree while efficiently removing unproductive branches. This results in faster gameplay and provides a foundation for making smart, strategic moves in the intricate world of chess.
 
 # Limitations
-in progress
+This project was undertaken out of personal interest and is in no way meant as a serious altneritive to the many advanced chess engines today. If I get around to it, in the future I would like to explore AI related board evaluation methods using CNNs and similiar. I also need to do some more intensive optimisation in the move generation, at current, when I test for check I am generating all of the opponent's attack squares and then &nding it with the current players king bitboard. While this will suffice for the time being, I would like to swap it for a more preformant method.
+
+Currently the engine does not support special moves such as promotion, castling, and en passant. Adding these will be trivial, but for now I am keeping the move genration simple whilst I work on the command interface & the search/evaluation.
+
+Currently there is no support for start/end game book moves. This causes the engine to act a bit wierd in the start and end games  -- this is mainly due to the evaluation function being in progress -- as theorecticlly a good evaluation function can find book moves by iteself.
+
