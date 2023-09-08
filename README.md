@@ -1,9 +1,9 @@
 # ChessEngine
 A chess engine is a computer program that calculates and suggests the best moves in a game of chess, leveraging complex algorithms and databases to assess positions and make strategic decisions, enabling players to compete against it.
 
-## How to Use
+# How to Use
 
-## Overview
+# Overview
 To create a functional chess engine, several key features need to be considered:
 
 - **Board Representation**: Find a way to represent the current state of the chessboard in an effeicent manner.
@@ -13,7 +13,7 @@ To create a functional chess engine, several key features need to be considered:
 
 Lets explore these key ideas in a bit bore depth, and understand how we can create a chess engine of our own.    
 
-### Board Representation
+## Board Representation
 
 When it comes to chess engines we will see time and time again the question of memory vesus speed, and with modern day hardware, the answer will nearly always be speed. 
 I say this as it leads on to the big question, **how do we represent the chess board?**.
@@ -26,7 +26,7 @@ If we take a type of piece, lets say whitePawns, and now think of our 64*64 ches
 
 So to answer the overarching question, we can represent our entire chess board as 12 bitboards, one per peice.     
 
-### Move Generation
+## Move Generation
 
 When it comes to move generation in a chess engine, efficiency is paramount. Generating moves at runtime can be a performance bottleneck, so we opt for clever techniques to streamline the process and achieve the speed necessary for a competitive chess program.
 
@@ -64,3 +64,35 @@ Now, let's break down how magic numbers streamline move generation:**
 - Accessing the Lookup Table: Finally, we use the result of our computation as an index to access a precomputed lookup table. This table provides us with all the possible move directions and target squares for the sliding piece, considering the specific blocking pattern.
 
 In essence, magic numbers enable us to find all possible moves of a sliding piece with minimal computational effort. By cleverly mapping complex blocking patterns to unique indices, we optimize move generation and ensure that our chess engine operates at peak efficiency.
+
+## Position Evalutation
+in progress
+
+## Search Algorithm
+
+
+
+The Negamax Algorithm
+Negamax/minimax is a vital algorithm in computer chess. Negamax is a variation of the minimax algorithm and both serve as the core of move selection in many many chess engines.
+
+Core Aspects of Negamax:
+Recursive Search: Negamax explores potential positions on the chessboard by constructing a game tree. It recursively considers both the player's moves and their opponent's responses to thoes moves.
+
+Evaluation Function: At the leaf nodes of the tree, an evaluation function assigns a numerical value to each position, reflecting its desirability for the current player. Factors like piece values, board control, and king safety are often considered.
+
+Minimizing Losses: Negamax minimizes losses for the player whose turn it is. It selects moves that maximize the evaluation when it's their turn and minimizes it when it's the opponent's turn.
+
+Alpha-Beta Pruning
+In small domain application (eg naughts and crosses) minimax can solve every possible move and guarentee the best move is played. In chess however the domain is much much bigger. Lets say that it's the opening game (white has 20 possible moves). At a depth of 2 (whites move then blacks move) we already must consider 20^2 leafs. So to boost efficiency, I've implemented alpha-beta pruning alongside Negamax. This optimization reduces the number of positions to evaluate, making the search faster without sacrificing accuracy.
+
+How Alpha-Beta Pruning Works:
+**Alpha**: This represents the minimum score the maximizing player is assured of having and starts at negative infinity.
+
+**Beta**: This represents the maximum score the minimizing player is assured of having and starts at positive infinity.
+
+**Pruning**: When a position's evaluation falls outside the alpha-beta bounds, we prune (discard) that branch. This is because we know the opponent can force a position with a better score, so further exploration isn't necessary.
+
+Combining the Negamax algorithm with alpha-beta pruning is a powerful approach to position evaluation. It systematically explores the game tree while efficiently removing unproductive branches. This results in faster gameplay and provides a foundation for making smart, strategic moves in the intricate world of chess.
+
+# Limitations
+in progress
