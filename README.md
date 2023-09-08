@@ -72,7 +72,7 @@ in progress
 
 
 
-The Negamax Algorithm
+### The Negamax Algorithm
 Negamax/minimax is a vital algorithm in computer chess. Negamax is a variation of the minimax algorithm and both serve as the core of move selection in many many chess engines.
 
 Core Aspects of Negamax:
@@ -82,10 +82,10 @@ Evaluation Function: At the leaf nodes of the tree, an evaluation function assig
 
 Minimizing Losses: Negamax minimizes losses for the player whose turn it is. It selects moves that maximize the evaluation when it's their turn and minimizes it when it's the opponent's turn.
 
-Alpha-Beta Pruning
+## Alpha-Beta Pruning
 In small domain application (eg naughts and crosses) minimax can solve every possible move and guarentee the best move is played. In chess however the domain is much much bigger. Lets say that it's the opening game (white has 20 possible moves). At a depth of 2 (whites move then blacks move) we already must consider 20^2 leafs. So to boost efficiency, I've implemented alpha-beta pruning alongside Negamax. This optimization reduces the number of positions to evaluate, making the search faster without sacrificing accuracy.
 
-How Alpha-Beta Pruning Works:
+**How Alpha-Beta Pruning Works:**  
 **Alpha**: This represents the minimum score the maximizing player is assured of having and starts at negative infinity.
 
 **Beta**: This represents the maximum score the minimizing player is assured of having and starts at positive infinity.
