@@ -23,49 +23,72 @@ The chess engine accepts various commands for interacting with the chessboard an
 ``` bash
 display
 ```
-displays the current state of the chessboard through standard output.
+displays the current state of the chessboard by showing the chessboard with the pieces' positions.
 
-bash
-Copy code
-display
-This command will show the chessboard with the pieces' positions.
+## Engine-Specific Commands
 
-Universal Chess Interface (UCI) Commands
-The engine supports some UCI (Universal Chess Interface) commands:
+### Moves Command
+``` bash
+moves [square] [color]
+```
+Lists all legal moves for a piece on the specified square and with the specified color.  
+- square = square to analyse written by rank+file: eg: "e4"
+- color = what color player to consider the move for, either "b" or "w" for black or white
 
-uci: Initializes the UCI protocol.
+### Move Command
+``` bash
+move [fromSquare] [toSquare] [display]
+```
+- fromSquare = square to move from : eg: "e4"
+- toSquare = square to move to : eg: "f4"
+- display = optional, "y" to display the board after the move.
+  
+Allows a player to make a move on the board. Provide the starting and ending square coordinates, and optionally, set display to "y" to show the updated board after the move.
 
-debug [on|off]: Enables or disables debugging mode.
-
-isready: Checks if the engine is ready to receive commands.
-
-ucinewgame: Starts a new game.
-
-position [FEN] [color] [castling] [en passant] [halfMoves] [fullMoves] [moves]: Sets up the position on the chessboard. You can specify the position in Forsyth-Edwards Notation (FEN).
-
-go [color] [depth]: Initiates a search for the best move for the specified color and depth.
-
-Engine-Specific Commands
-moves [square] [color]: Lists legal moves for a piece on the specified square and color.
-
-check [color]: Checks if the specified color is in check.
+### Check command
+``` bash
+check [color]
+```
+Checks if the specified color ("w" or "b") is in check.
 
 mate [color]: Checks if the specified color is in checkmate.
 
 piece [square]: Identifies the piece on the specified square.
 
-move [fromSquare] [toSquare] [display]: Allows a player to make a move on the board. Provide the starting and ending square coordinates, and optionally, set display to "y" to show the updated board after the move.
 
-Playing a Game
-Start the engine and initialize it with the uci command.
 
-Set up the initial position using the position command with a valid FEN string or the "startpos" keyword.
+## Universal Chess Interface (UCI) Commands
 
-Begin a new game with the ucinewgame command.
+The engine supports some UCI (Universal Chess Interface) commands I am still hooking these into the engine so some commands are marked as, "in progress". However these commands are non vital to use the engine to it's fullest potentual.
 
-Issue go commands to let the engine calculate and suggest moves for both white and black players.
+### Position Command
+``` bash
+position [FEN|startpos] [moves]: 
+```
+moves are option, they are just sequentually processed after the startpos/fen. Eg, position startpos e2e4 will do the following:  Set the board to the starting position.  Make the move e2->e4 if valid
 
-Use the move command to make moves on the board.
+
+### Go Command
+```` bash
+go [color] [depth]
+````
+Initiates a search for the best move for the specified color and depth. Note: higher depths will produce better results, but take longer in the future I will fully convert this command to how it is defined in the UCI guidelines so that the engine choses the depth value.
+
+### In Progress
+
+uci: Initializes the UCI protocol.  
+
+debug [on|off]: Enables or disables debugging mode.  
+
+isready: Checks if the engine is ready to receive commands.  
+
+
+##Playing a Game
+Start the engine and setup the board with position.
+
+Optionally issue go commands to let the engine calculate and suggest moves for white or black players.
+
+Use the move command to make moves.
 
 To display the current state of the chessboard at any point, use the display command.
 
@@ -75,31 +98,32 @@ Determine if a player is in check using the check command.
 
 Check if a player is in checkmate using the mate command.
 
-Identify the piece on a specific square using the piece command.
 
 Example Usage
-bash
-Copy code
-uci
+```bash
 position startpos
-ucinewgame
-go w 3
 display
+go w 4
 moves e2 w
+move e2e4 y
+move e7e5
 check b
 mate w
-piece d4
+piece d1
 move e2 e4 y
-Note
-Ensure that you follow the correct syntax for each command.
+go w 5
+go b 5
+```
 
-The engine will respond to commands with appropriate information or moves.
+## Commands Summary
 
-You can integrate this chess engine into your own applications or use it for analysis and gameplay.
+Ensure that you follow the correct syntax for each command.  
+The engine will respond to commands with appropriate information or moves.  
+You can integrate this chess engine into your own applications or use it for analysis and gameplay.  
 
 Enjoy using the chess engine!
 
-# Overview
+# Engine Overview
 To create a functional chess engine, several key features need to be considered:
 
 - **Board Representation**: Find a way to represent the current state of the chessboard in an effeicent manner.
