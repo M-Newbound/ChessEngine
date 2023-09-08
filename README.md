@@ -3,8 +3,101 @@ A chess engine is a computer program that calculates and suggests the best moves
 
 # How to Use
 
-in progress 
+This chess engine accepts various commands through standard input and will repond via standard output. Below are the instructions on how to use this chess engine:
 
+## Running the Chess Engine
+
+Compile the Code:  
+Before running the chess engine, ensure you have a C++ compiler installed on your system. This engine does not have any external dependencies, so no worries about installing third party libraries. Compile the code using a C++ compiler, such as g++. Navigate to the directory containing the code files in your terminal.
+
+The first command will compile the code, the second line will run the engine.  
+``` bash
+g++ -o chess_engine main.cpp
+./chess_engine
+```
+
+## Commands
+The chess engine accepts various commands for interacting with the chessboard and evaluating the game. Here are the available commands:
+
+### Display the Chessboard
+``` bash
+display
+```
+displays the current state of the chessboard through standard output.
+
+bash
+Copy code
+display
+This command will show the chessboard with the pieces' positions.
+
+Universal Chess Interface (UCI) Commands
+The engine supports some UCI (Universal Chess Interface) commands:
+
+uci: Initializes the UCI protocol.
+
+debug [on|off]: Enables or disables debugging mode.
+
+isready: Checks if the engine is ready to receive commands.
+
+ucinewgame: Starts a new game.
+
+position [FEN] [color] [castling] [en passant] [halfMoves] [fullMoves] [moves]: Sets up the position on the chessboard. You can specify the position in Forsyth-Edwards Notation (FEN).
+
+go [color] [depth]: Initiates a search for the best move for the specified color and depth.
+
+Engine-Specific Commands
+moves [square] [color]: Lists legal moves for a piece on the specified square and color.
+
+check [color]: Checks if the specified color is in check.
+
+mate [color]: Checks if the specified color is in checkmate.
+
+piece [square]: Identifies the piece on the specified square.
+
+move [fromSquare] [toSquare] [display]: Allows a player to make a move on the board. Provide the starting and ending square coordinates, and optionally, set display to "y" to show the updated board after the move.
+
+Playing a Game
+Start the engine and initialize it with the uci command.
+
+Set up the initial position using the position command with a valid FEN string or the "startpos" keyword.
+
+Begin a new game with the ucinewgame command.
+
+Issue go commands to let the engine calculate and suggest moves for both white and black players.
+
+Use the move command to make moves on the board.
+
+To display the current state of the chessboard at any point, use the display command.
+
+Check for legal moves for a piece using the moves command.
+
+Determine if a player is in check using the check command.
+
+Check if a player is in checkmate using the mate command.
+
+Identify the piece on a specific square using the piece command.
+
+Example Usage
+bash
+Copy code
+uci
+position startpos
+ucinewgame
+go w 3
+display
+moves e2 w
+check b
+mate w
+piece d4
+move e2 e4 y
+Note
+Ensure that you follow the correct syntax for each command.
+
+The engine will respond to commands with appropriate information or moves.
+
+You can integrate this chess engine into your own applications or use it for analysis and gameplay.
+
+Enjoy using the chess engine!
 
 # Overview
 To create a functional chess engine, several key features need to be considered:
@@ -23,9 +116,9 @@ I say this as it leads on to the big question, **how do we represent the chess b
 
 We know a chess board (8*8 squares) contains 6 unique pieces per side. Running some simple math (6 + 6 + NONE piece) we know that each square may have 13 states, so, 
 what we could do is define a enum and simiply store our board in an array of these enums, with size 64. This certaintly looks like a nice way of going about things, however
-is it **fast**? And when we get to speak of Move Generation we will find the answer to be a big **NO NO**. This is where we introduce Bitboards.
+is it **fast**? And when we get to speak of Move Generation we will find the answer to be  **NO**. This is where we introduce Bitboards.
 
-If we take a type of piece, lets say whitePawns, and now think of our 64*64 chess board. Each of these squares can be in one of two states, it can be hasWhitePawn or noWhitePawn. So, instead of storing these states as entries to an array, why not create use a datatype which represents 64 bits, uint64_t. Now our entire chessboard's state of whitePawns has been represented as a single 64 bit integer. On modern processors this allows for extremely fast manipulation.
+If we take a type of piece, lets say whitePawns, and now think of our 64squares chess board. Each of these squares can be in one of two states, it can be hasWhitePawn or noWhitePawn. So, instead of storing these states as entries to an array, why not create use a datatype with 64 bits of memory, for our purpose we will use uint64_t. Now our entire chessboard's state of whitePawns has been represented as a single 64 bit integer. On modern processors this allows for extremely fast manipulation.
 
 So to answer the overarching question, we can represent our entire chess board as 12 bitboards, one per peice.     
 
