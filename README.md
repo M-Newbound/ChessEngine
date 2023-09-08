@@ -77,20 +77,16 @@ Negamax/minimax is a vital algorithm in computer chess. Negamax is a variation o
 
 Core Aspects of Negamax:  
 - **Recursive Searching**: Negamax explores potential positions on the chessboard by constructing a game tree. It recursively considers both the player's moves and their opponent's responses to thoes moves.
-
 - **Evaluation Function**: At the leaf nodes of the tree, an evaluation function assigns a numerical value to each position, reflecting its desirability for the current player. Factors like piece values, board control, and king safety are often considered.
-
 - **Minimizing Losses**: Negamax minimizes losses for the player whose turn it is. It selects moves that maximize the evaluation when it's their turn and minimizes it when it's the opponent's turn.
 
 ### Alpha-Beta Pruning
 In small domain application (eg naughts and crosses) minimax can solve every possible move and guarentee the best move is played. In chess however the domain is much much bigger. Lets say that it's the opening game (white has 20 possible moves). At a depth of 2 (whites move then blacks move) we already must consider 20^2 leafs. So to boost efficiency, I've implemented alpha-beta pruning alongside Negamax. This optimization reduces the number of positions to evaluate, making the search faster without sacrificing accuracy.
 
 **How Alpha-Beta Pruning Works:**  
-**Alpha**: This represents the minimum score the maximizing player is assured of having and starts at negative infinity.
-
-**Beta**: This represents the maximum score the minimizing player is assured of having and starts at positive infinity.
-
-**Pruning**: When a position's evaluation falls outside the alpha-beta bounds, we prune (discard) that branch. This is because we know the opponent can force a position with a better score, so further exploration isn't necessary.
+- **Alpha**: This represents the minimum score the maximizing player is assured of having and starts at negative infinity.
+- **Beta**: This represents the maximum score the minimizing player is assured of having and starts at positive infinity.
+- **Pruning**: When a position's evaluation falls outside the alpha-beta bounds, we prune (discard) that branch. This is because we know the opponent can force a position with a better score, so further exploration isn't necessary.
 
 Combining the Negamax algorithm with alpha-beta pruning is a powerful approach to position evaluation. It systematically explores the game tree while efficiently removing unproductive branches. This results in faster gameplay and provides a foundation for making smart, strategic moves in the intricate world of chess.
 
