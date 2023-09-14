@@ -53,10 +53,10 @@ int main() {
             commands::engine_piece(&gameBoard, command);
         }
 
-        else {
-            std::cout << "unknown command" << std::endl;
+        else if (std::regex_match(command, commands::engine_moveCmd)) {
+            commands::engine_move(&gameBoard, command);
         }
-        
+
     }
 
     return 0;

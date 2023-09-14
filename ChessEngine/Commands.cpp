@@ -1,56 +1,98 @@
+/**
+ * @file commands.cpp
+ *
+ * Implementation of commands related to a chess engine using the Universal Chess Interface (UCI) protocol.
+ * And also engine specific commands.
+ *
+ * @author Martin N
+ * @date 09/2023
+ */
+
+
 #include "Commands.h"
 #include "MoveGeneration.h"
 #include "BoardEvaluation.h"
 #include <iostream>
 #include <vector>
 
+
+/**
+* Displays the current state of the chessboard in the console.
+*
+* @param board Pointer to the ChessBoard object representing the current game state.
+*/
 void commands::engine_display(const ChessBoard* board)
 {
+    const char pieceSymbols[] = {
+    '-', // ChessBoard::PieceType::EMPTY
+    'P', // ChessBoard::PieceType::WHITE_PAWN
+    'R', // ChessBoard::PieceType::WHITE_ROOK
+    'N', // ChessBoard::PieceType::WHITE_KNIGHT
+    'B', // ChessBoard::PieceType::WHITE_BISHOP
+    'Q', // ChessBoard::PieceType::WHITE_QUEEN
+    'K', // ChessBoard::PieceType::WHITE_KING
+    'p', // ChessBoard::PieceType::BLACK_PAWN
+    'r', // ChessBoard::PieceType::BLACK_ROOK
+    'n', // ChessBoard::PieceType::BLACK_KNIGHT
+    'b', // ChessBoard::PieceType::BLACK_BISHOP
+    'q', // ChessBoard::PieceType::BLACK_QUEEN
+    'k'  // ChessBoard::PieceType::BLACK_KING
+    };
+
     std::cout << std::endl;
     for (std::int8_t i = 63; i >= 0; i--)
     {
         if (i % 8 == 7) std::cout << " " << (i / 8) + 1 << " | ";
 
-        char currSquare = '-';
         ChessBoard::PieceType piece = board->getPieceTypeAtSquare(i / 8, i % 8);
-
-        if (piece == ChessBoard::PieceType::WHITE_PAWN) currSquare = 'P';
-        else if (piece == ChessBoard::PieceType::WHITE_ROOK) currSquare = 'R';
-        else if (piece == ChessBoard::PieceType::WHITE_KNIGHT) currSquare = 'N';
-        else if (piece == ChessBoard::PieceType::WHITE_BISHOP) currSquare = 'B';
-        else if (piece == ChessBoard::PieceType::WHITE_QUEEN) currSquare = 'Q';
-        else if (piece == ChessBoard::PieceType::WHITE_KING) currSquare = 'K';
-        else if (piece == ChessBoard::PieceType::BLACK_PAWN) currSquare = 'p';
-        else if (piece == ChessBoard::PieceType::BLACK_ROOK) currSquare = 'r';
-        else if (piece == ChessBoard::PieceType::BLACK_KNIGHT) currSquare = 'n';
-        else if (piece == ChessBoard::PieceType::BLACK_BISHOP) currSquare = 'b';
-        else if (piece == ChessBoard::PieceType::BLACK_QUEEN) currSquare = 'q';
-        else if (piece == ChessBoard::PieceType::BLACK_KING) currSquare = 'k';
+        char currSquare = pieceSymbols[static_cast<int>(piece)+1];
 
         std::cout << currSquare << ' ';
         if (i % 8 == 0) std::cout << std::endl;
     }
 
-    std::cout << "   '----------------" << std::endl << "     a b c d e f g h" << std::endl << std::endl;
+    std::cout << "   '----------------" << std::endl << "     a b c d e f g h\n" << std::endl;
+    std::cout << (board->currPlayer ? "      Whites's Move" : "      Black's Move") << std::endl;
 }
 
+/**
+* Placeholder function for processing the "uci" command.
+*/
 void commands::uci_uci()
 {
 }
 
+
+/**
+* Placeholder function for processing the "debug" command.
+*
+* @param mode The debug mode (either "on" or "off").
+*/
 void commands::uci_debug(std::string mode)
 {
 }
 
+/**
+* Sends the "readyok" response to indicate that the engine is ready to receive commands.
+*/
 void commands::uci_isready()
 {
     std::cout << "readyok" << std::endl;
 }
 
+/**
+ * Placeholder function for processing the "ucinewgame" command.
+ */
 void commands::uci_newGame()
 {
 }
 
+/**
+ * Converts a square coordinate in algebraic notation to a numeric representation.
+ *
+ * @param square The square coordinate in algebraic notation (e.g., "e4").
+ * @return The numeric representation of the square (0 to 63).
+ */
 int squareToNumeric(const std::string& square) {
     
     int file = square[0] - 'a';
@@ -59,6 +101,12 @@ int squareToNumeric(const std::string& square) {
     return rank * 8 + (7 - file);
 }
 
+/**
+ * Converts a numeric square representation to algebraic notation.
+ *
+ * @param numeric The numeric representation of the square (0 to 63).
+ * @return The square coordinate in algebraic notation (e.g., "e4").
+ */
 std::string numericToSquare(int numeric) {
 
     int rank = numeric / 8;
@@ -70,6 +118,12 @@ std::string numericToSquare(int numeric) {
     return std::string(1, fileChar) + std::string(1, rankChar);
 }
 
+/**
+ * Processes the "position" command in UCI and updates the chessboard accordingly.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "position" command, including FEN and move history.
+ */
 void commands::uci_position(ChessBoard* board, std::string details)
 {
     // Remove spaces using erase-remove idiom
@@ -99,6 +153,7 @@ void commands::uci_position(ChessBoard* board, std::string details)
 
         bool whitesMove = color == "w";
         commands::loadFEN(board, fen);
+        board->currPlayer = whitesMove;
 
 
         // Handle the moves
@@ -138,7 +193,12 @@ void commands::uci_position(ChessBoard* board, std::string details)
 }
 
 
-
+/**
+ * Processes the "go" command in UCI and selects the best move for the engine to play.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "go" command, including the time control information.
+ */
 void commands::uci_go(ChessBoard* board, std::string details)
 {
     std::smatch match;
@@ -152,7 +212,13 @@ void commands::uci_go(ChessBoard* board, std::string details)
 }
 
 
-
+/**
+ * Loads a chessboard state from a Forsyth-Edwards Notation (FEN) string.
+ *
+ * @param board Pointer to the ChessBoard object to update.
+ * @param fen The FEN string representing the desired chessboard state.
+ * @return True if the FEN was successfully loaded; otherwise, false.
+ */
 bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
     if (fen.empty()) return false; // Empty FEN string
 
@@ -202,6 +268,12 @@ bool commands::loadFEN(ChessBoard* board, const std::string& fen) {
     return true;
 }
 
+/**
+ * Processes the "moves" command and prints legal moves from a specified square.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "moves" command, including the source square and color.
+ */
 void commands::engine_moves(ChessBoard* board, std::string details)
 {
     std::smatch match;
@@ -220,6 +292,12 @@ void commands::engine_moves(ChessBoard* board, std::string details)
     }
 }
 
+/**
+ * Processes the "check" command and checks if a specified color is in check.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "check" command, including the color to check.
+ */
 void commands::engine_isCheck(ChessBoard* board, std::string details)
 {
     std::smatch match;
@@ -231,6 +309,12 @@ void commands::engine_isCheck(ChessBoard* board, std::string details)
     }
 }
 
+/**
+ * Processes the "mate" command and checks if a specified color is in checkmate.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "mate" command, including the color to check.
+ */
 void commands::engine_isMate(ChessBoard* board, std::string details)
 {
     std::smatch match;
@@ -242,6 +326,12 @@ void commands::engine_isMate(ChessBoard* board, std::string details)
     }
 }
 
+/**
+ * Processes the "piece" command and prints the type of piece on a specified square.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "piece" command, including the square.
+ */
 void commands::engine_piece(ChessBoard* board, std::string details)
 {
     std::smatch match;
@@ -251,5 +341,36 @@ void commands::engine_piece(ChessBoard* board, std::string details)
 
         std::cout << ChessBoard::pieceTypeToFen(board->getPieceTypeAtSquare(square/8, square%8)) << std::endl;
     
+    }
+}
+
+/**
+ * Processes the "move" command and makes a move on the chessboard if it's legal.
+ *
+ * @param board Pointer to the ChessBoard object representing the current game state.
+ * @param details The details of the "move" command, including the source and destination squares.
+ */
+void commands::engine_move(ChessBoard* board, std::string details)
+{
+    std::smatch match;
+    if (std::regex_match(details, match, engine_moveCmd)) {
+
+        int squareFrom = squareToNumeric(match[1]);
+        int squareTo = squareToNumeric(match[2]);
+        
+        bool display = match[3] == "y";
+        bool color = board->currPlayer;
+
+        std::vector<ChessMove> moves = MoveGeneration::generateSquaresLegalMoves(board, squareFrom, color);
+
+        for (ChessMove move : moves) {
+            if (move.toSquare == squareTo) {
+                board->makeMove(squareFrom, squareTo);
+                if (display) engine_display(board);
+                return;
+            }
+        }
+
+        std::cout << "Illegal Move for " << (color ? "white" : "black") << std::endl;
     }
 }

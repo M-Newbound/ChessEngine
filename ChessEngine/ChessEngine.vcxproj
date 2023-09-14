@@ -143,7 +143,6 @@
     <ClCompile Include="ChessBoard.cpp" />
     <ClCompile Include="Commands.cpp" />
     <ClCompile Include="engine.cpp" />
-    <ClCompile Include="ChessData.cpp" />
     <ClCompile Include="MoveGeneration.cpp" />
   </ItemGroup>
   <ItemGroup>
